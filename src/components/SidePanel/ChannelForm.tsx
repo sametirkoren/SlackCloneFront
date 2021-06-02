@@ -1,17 +1,13 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useContext, useState } from 'react'
 import { Button, Form, Icon, Input, Modal } from 'semantic-ui-react'
 import { IChannel } from '../../models/channels'
 import {v4 as uuid} from 'uuid';
-
-interface IProps{
-    selectedModal : boolean,
-    closeModal : () => void,
-    createChannel : (channel : IChannel) => void
-}
+import ChannelStore from '../../stores/ChannelStore';
+import {observer} from 'mobx-react-lite'
 
 
 
-export const ChannelForm : React.FC<IProps> = ({selectedModal,closeModal,createChannel}) => {
+const ChannelForm : React.FC= () => {
 
     const initialChannel = {
         id : '',
@@ -20,7 +16,7 @@ export const ChannelForm : React.FC<IProps> = ({selectedModal,closeModal,createC
     }
 
     const [channel , setChannel] = useState<IChannel>(initialChannel)
-
+    const {isModalVisible , showModal ,createChannel} = useContext(ChannelStore);
     const handleInputChange = (event : ChangeEvent<HTMLInputElement>) => {
         console.log(event.target.value)
         setChannel({...channel, [event.target.name] :  event.target.value})
@@ -32,12 +28,12 @@ export const ChannelForm : React.FC<IProps> = ({selectedModal,closeModal,createC
             id : uuid()
         }
         createChannel(newChannel);
-        closeModal();
+        showModal(false);
     }
 
     return (
         <>
-                <Modal basic open={selectedModal}>
+                <Modal basic open={isModalVisible}>
                 <Modal.Header>Kanal Ekle</Modal.Header>
                 <Modal.Content>
                     <Form>
@@ -55,7 +51,7 @@ export const ChannelForm : React.FC<IProps> = ({selectedModal,closeModal,createC
                             <Icon name='checkmark'/> Ekle
                         </Button>
 
-                        <Button basic color='red' inverted  onClick={closeModal}>
+                        <Button basic color='red' inverted  onClick={() => showModal(false)}>
                             <Icon name='remove'/> İptal
                         </Button>
                     </Modal.Actions>
@@ -64,3 +60,4 @@ export const ChannelForm : React.FC<IProps> = ({selectedModal,closeModal,createC
         </>
     )
 }
+export default observer(ChannelForm)

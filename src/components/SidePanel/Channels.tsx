@@ -1,25 +1,22 @@
-import axios from 'axios';
-import React, { Component, useEffect, useState } from 'react'
-import { Button, Form, Icon, Input, Menu, Modal } from 'semantic-ui-react';
-import {IChannel} from '../../models/channels';
-import { ChannelForm } from './ChannelForm';
-import { ChannelItem } from './ChannelItem';
 
-import agent from '../../api/agent'
+import React, {  useContext, useEffect, useState } from 'react'
+import {  Icon, Menu } from 'semantic-ui-react';
+import {IChannel} from '../../models/channels';
+
+import { ChannelItem } from './ChannelItem';
+import {observer} from 'mobx-react-lite'
+
+import ChannelStore from '../../stores/ChannelStore';
+import ChannelForm from './ChannelForm';
 
 
 const Channels = () => {
-    const [channels , setChannels] = useState<IChannel[]>([]);
-    const [selectedModal , setModal] = useState(false);
-    const openModal = () => setModal(true);
-    const closeModal = () => setModal(false);
+    const channelStore = useContext(ChannelStore);
+    const {storeChannels} = channelStore;
 
     useEffect(() => {
-        agent.Channels.list()
-        .then((response) => {
-            setChannels(response)
-        })
-    },[])
+       channelStore.loadChannels()
+    },[channelStore])
     
     const displayChannels = (channels : IChannel[]) => {
         return (
@@ -30,10 +27,7 @@ const Channels = () => {
         ))
     }
 
-    const handleCreateChannel = (channel : IChannel) => {
-        agent.Channels.create(channel).then(() =>  setChannels([...channels,channel]))
-       
-    }
+  
        
         return (
             <React.Fragment>
@@ -42,13 +36,13 @@ const Channels = () => {
                         <span>
                             <Icon name="exchange"/> Kanallar
                         </span> {' '}
-                        ({channels.length}) <Icon name="add" onClick={openModal}/>
+                        ({storeChannels.length}) <Icon name="add" onClick={()=> channelStore.showModal(true)}/>
                     </Menu.Item>
-
-                    {displayChannels(channels)}
+                   
+                    {displayChannels(storeChannels)}
                 </Menu.Menu>
 
-                <ChannelForm selectedModal={selectedModal} createChannel={handleCreateChannel} closeModal={closeModal}/>
+                <ChannelForm  />
          
          
          
@@ -57,4 +51,4 @@ const Channels = () => {
     }
    
 
-export default Channels;
+export default observer(Channels);
