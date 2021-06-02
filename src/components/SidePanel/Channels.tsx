@@ -1,17 +1,40 @@
-import React, { Component } from 'react'
+import axios from 'axios';
+import React, { Component, useEffect, useState } from 'react'
 import { Button, Form, Icon, Input, Menu, Modal } from 'semantic-ui-react';
+import {IChannel} from '../../models/channels';
+import { ChannelForm } from './ChannelForm';
+import { ChannelItem } from './ChannelItem';
 
-class Channels extends Component  {
-    state = {
-        channels : [],
-        modal:false,
+import agent from '../../api/agent'
+
+
+const Channels = () => {
+    const [channels , setChannels] = useState<IChannel[]>([]);
+    const [selectedModal , setModal] = useState(false);
+    const openModal = () => setModal(true);
+    const closeModal = () => setModal(false);
+
+    useEffect(() => {
+        agent.Channels.list()
+        .then((response) => {
+            setChannels(response)
+        })
+    },[])
+    
+    const displayChannels = (channels : IChannel[]) => {
+        return (
+            channels.length > 0 &&
+            channels.map((channel) => (
+                <ChannelItem key={channel.id} channel={channel}/>
+            )
+        ))
     }
-    openModal = () => this.setState({modal:true})
-    closeModal = () => this.setState({modal:false})
 
-    render(){
-        const {channels , modal} = this.state;
-        console.log(modal);
+    const handleCreateChannel = (channel : IChannel) => {
+        agent.Channels.create(channel).then(() =>  setChannels([...channels,channel]))
+       
+    }
+       
         return (
             <React.Fragment>
                 <Menu.Menu style={{paddingBottom : '2em'}}>
@@ -19,36 +42,19 @@ class Channels extends Component  {
                         <span>
                             <Icon name="exchange"/> Kanallar
                         </span> {' '}
-                        ({channels.length}) <Icon name="add" onClick={this.openModal}/>
+                        ({channels.length}) <Icon name="add" onClick={openModal}/>
                     </Menu.Item>
+
+                    {displayChannels(channels)}
                 </Menu.Menu>
-            <Modal basic open={modal}>
-                <Modal.Header>Kanal Ekle</Modal.Header>
-                <Modal.Content>
-                    <Form>
-                        <Form.Field>
-                            <Input fluid label="Kanal Adı" name="channelName"/>
-                        </Form.Field>
-                        <Form.Field>
-                            <Input fluid label="Açıklama" name="channelDescription"/>
-                        </Form.Field>
-                    </Form>
-                    </Modal.Content>
 
-                    <Modal.Actions>
-                        <Button basic color='green' inverted onClick={this.openModal} >
-                            <Icon name='checkmark'/> Ekle
-                        </Button>
-
-                        <Button basic color='red' inverted  onClick={this.closeModal}>
-                            <Icon name='remove'/> İptal
-                        </Button>
-                    </Modal.Actions>
-               
-            </Modal>
+                <ChannelForm selectedModal={selectedModal} createChannel={handleCreateChannel} closeModal={closeModal}/>
+         
+         
+         
             </React.Fragment>
         )
     }
    
-}
+
 export default Channels;
