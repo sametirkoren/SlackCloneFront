@@ -9,14 +9,14 @@ export const MessageForm = () => {
 
             <Button.Group icon widths="2">
                 <Button
-                    color="orange"
+                    color="pink"
                     content="Cevap Ekle"
                     labelPosition="left"
                     icon="edit"
                 />
 
                 <Button
-                    color="teal"
+                    color="grey"
                     content=" Medya Yükle"
                     labelPosition="right"
                     icon="cloud upload"

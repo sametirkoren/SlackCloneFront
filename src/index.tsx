@@ -3,10 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter} from 'react-router-dom';
+import {BrowserRouter, Route} from 'react-router-dom';
+import Register from './components/Auth/Register';
+import Login from './components/Auth/Login';
+
 ReactDOM.render(
     <BrowserRouter>
-      <App />
+      <Route  exact path="/" component={App}/>
+      <Route exact path="/register" component={Register}/>
+      <Route exact path="/login" component={Login}/>
     </BrowserRouter>
    ,
 
