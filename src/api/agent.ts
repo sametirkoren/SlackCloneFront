@@ -1,8 +1,20 @@
 import axios, { AxiosResponse } from 'axios'
 import { IChannel } from '../models/channels';
-
+import {history} from '../index'
+import { toast } from 'react-toastify';
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
+
+axios.interceptors.response.use(undefined,(error) => {
+    if(error.message == 'Network Error' && !error.response){
+        toast.error('Ağ Hatası - API\'nin çalıştığından emin olun.')
+        return;
+    }
+    const {status} = error.response;
+    if(status === 404) history.push('/notfound')
+
+    if(status === 500) toast.error("Sunucu Hatası - Terminali Kontrol Et");
+})
 
 const responseBody = (response : AxiosResponse) => response.data;
 
