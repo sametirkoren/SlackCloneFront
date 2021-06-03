@@ -3,7 +3,7 @@ import { IChannel } from '../models/channels';
 import {history} from '../index'
 import { toast } from 'react-toastify';
 import { IUser, IUserFormValues } from '../models/users';
-import { IMessage, IMessageFormValues } from '../models/messages';
+import { IMediaFormValues, IMessage, IMessageFormValues } from '../models/messages';
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
 
@@ -38,7 +38,17 @@ const request = {
     get : (url : string) => axios.get(url).then(responseBody),
     post : (url : string , body : {}) => axios.post(url,body).then(responseBody),
     put : (url : string , body : {}) => axios.put(url,body).then(responseBody),
-    delete : (url:string) => axios.delete(url).then(responseBody)
+    delete : (url:string) => axios.delete(url).then(responseBody),
+    postMedia: (url:string, media: IMediaFormValues) => {
+        let formData = new FormData()
+        formData.append('File',media.file)
+        formData.append('ChannelId',media.channelId)
+        formData.append('MessageType','2')
+
+        return axios.post(url,formData,{
+            headers:{'Content-type':'multipart/form-data'}
+        }).then(responseBody)
+    }
 }
 
 
@@ -56,7 +66,8 @@ const User = {
 }
 
 const Messages = {
-    send: (message: IMessageFormValues): Promise<IMessage> => request.post('/messages',message)
+    send: (message: IMessageFormValues): Promise<IMessage> => request.post('/messages',message),
+    sendMedia : (media: IMediaFormValues): Promise<IMessage> => request.postMedia(`/messages/upload`,media)
 }
 
 

@@ -6,9 +6,10 @@ import TextInput from '../Common/Form/TextInput'
 import { RootStoreContext } from '../../stores/rootStore'
 import { FORM_ERROR } from 'final-form'
 import { observer } from 'mobx-react-lite'
+import FileModal from './FileModal'
  const MessageForm = () => {
     const rootStore = useContext(RootStoreContext);
-    const {sendMessage} = rootStore.messageStore;
+    const {sendMessage , isModalVisible , showModal} = rootStore.messageStore;
     const  {getCurrentChannel} = rootStore.channelStore;
     const handleSubmitForm = async (values : IMessageFormValues) => {
         
@@ -38,9 +39,11 @@ import { observer } from 'mobx-react-lite'
                         color="grey"
                         content=" Medya Yükle"
                         labelPosition="right"
+                        onClick={() => showModal(true)}
                         icon="cloud upload"
                     />
                 </Button.Group>
+                <FileModal />
             </Segment>
                 </Form>
                
