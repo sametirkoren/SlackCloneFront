@@ -2,7 +2,7 @@ import React, { ChangeEvent, useContext, useState } from 'react'
 import { Button, Form, Icon, Input, Modal } from 'semantic-ui-react'
 import { IChannel } from '../../models/channels'
 import {v4 as uuid} from 'uuid';
-import ChannelStore from '../../stores/ChannelStore';
+import {RootStoreContext} from '../../stores/rootStore';
 import {observer} from 'mobx-react-lite'
 
 
@@ -16,7 +16,8 @@ const ChannelForm : React.FC= () => {
     }
 
     const [channel , setChannel] = useState<IChannel>(initialChannel)
-    const {isModalVisible , showModal ,createChannel} = useContext(ChannelStore);
+    const rootStore = useContext(RootStoreContext);
+    const {isModalVisible , showModal ,createChannel} = rootStore.channelStore;
     const handleInputChange = (event : ChangeEvent<HTMLInputElement>) => {
         console.log(event.target.value)
         setChannel({...channel, [event.target.name] :  event.target.value})

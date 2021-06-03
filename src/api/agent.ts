@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import { IChannel } from '../models/channels';
 import {history} from '../index'
 import { toast } from 'react-toastify';
+import { IUser, IUserFormValues } from '../models/users';
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
 
@@ -14,7 +15,20 @@ axios.interceptors.response.use(undefined,(error) => {
     if(status === 404) history.push('/notfound')
 
     if(status === 500) toast.error("Sunucu Hatası - Terminali Kontrol Et");
+
+    throw error.response;
 })
+
+axios.interceptors.request.use((config) => {
+    const token = window.localStorage.getItem('jwt');
+
+    if(token)
+        config.headers.authorization = `Bearer ${token}`
+
+    return config;
+
+}, (error) => Promise.reject(error))
+
 
 const responseBody = (response : AxiosResponse) => response.data;
 
@@ -32,6 +46,14 @@ const Channels = {
     create : (channel : IChannel) => request.post('/channels',channel),
 }
 
+
+const User = {
+    login : (user : IUserFormValues) : Promise<IUser> => request.post(`/user/login`,user),
+    register : (user : IUserFormValues) : Promise<IUser> => request.post(`/user/register`,user),
+    current : () : Promise<IUser> => request.get(`/user`)
+}
+
 export default {
-    Channels
+    Channels,
+    User
 }

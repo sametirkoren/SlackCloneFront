@@ -6,17 +6,17 @@ import {IChannel} from '../../models/channels';
 import { ChannelItem } from './ChannelItem';
 import {observer} from 'mobx-react-lite'
 
-import ChannelStore from '../../stores/ChannelStore';
+import {RootStoreContext} from '../../stores/rootStore';
 import ChannelForm from './ChannelForm';
 
 
 const Channels = () => {
-    const channelStore = useContext(ChannelStore);
-    const {storeChannels} = channelStore;
+    const rootStore = useContext(RootStoreContext);
+    const {storeChannels} = rootStore.channelStore;
 
     useEffect(() => {
-       channelStore.loadChannels()
-    },[channelStore])
+        rootStore.channelStore.loadChannels()
+    },[rootStore.channelStore])
     
     const displayChannels = (channels : IChannel[]) => {
         return (
@@ -36,7 +36,7 @@ const Channels = () => {
                         <span>
                             <Icon name="exchange"/> Kanallar
                         </span> {' '}
-                        ({storeChannels.length}) <Icon name="add" onClick={()=> channelStore.showModal(true)}/>
+                        ({storeChannels.length}) <Icon name="add" onClick={()=> rootStore.channelStore.showModal(true)}/>
                     </Menu.Item>
                    
                     {displayChannels(storeChannels)}

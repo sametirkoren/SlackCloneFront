@@ -1,15 +1,21 @@
-import React from 'react'
-import { Dropdown, Grid, Header, Icon } from 'semantic-ui-react';
+import React, { useContext } from 'react'
+import { Link } from 'react-router-dom';
+import { Dropdown, Grid, Header, Icon, Message } from 'semantic-ui-react';
+import { RootStoreContext } from '../../stores/rootStore';
 
 export const UserPanel = () => {
+    const rootStore = useContext(RootStoreContext)
+    const {user , logout , IsLoggedIn} = rootStore.userStore;
     const dropdownOptions = () => [
         {
             key : 'user',
             text : (
-                <span>Logged as : <strong>User</strong></span>
+                <span>Logged as : <strong>{user?.email}</strong></span>
             ),
             disabled : true
         },
+
+     
 
         {
             key : 'avatar',
@@ -17,6 +23,12 @@ export const UserPanel = () => {
                 <span>Change avatar</span>
             ),
             disabled : true
+        },
+        {
+            key : 'signout',
+            text : (
+               <span onClick={logout}>Çıkış Yap</span>
+            )
         },
     ]
     return (
@@ -28,7 +40,17 @@ export const UserPanel = () => {
                 </Header>
             </Grid.Row>
             <Header style={{padding : '0.25em'}} as="h4" inverted>
-                <Dropdown trigger={<span>User</span>} options={dropdownOptions()}></Dropdown>
+                {IsLoggedIn && user ? 
+                (
+                      <Dropdown trigger={<span>{user?.userName}</span>} options={dropdownOptions()}></Dropdown>
+                ) :  
+                    <Message>
+                    Hesabın Yok Mu ?   <Link to="/register">Kayıt Ol</Link>
+                    </Message> 
+                
+                }
+              
+              
             </Header>
         </Grid>
     )

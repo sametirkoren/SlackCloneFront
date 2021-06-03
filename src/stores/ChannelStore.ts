@@ -1,18 +1,20 @@
-import {action, configure, makeObservable, observable, runInAction} from 'mobx'
-import { createContext } from 'react'
+import {action,  makeObservable, observable, runInAction} from 'mobx'
+
 import agent from '../api/agent'
 import { IChannel } from '../models/channels'
+import { RootStore } from './rootStore'
 
 
 
-configure({enforceActions: 'always'})
 
-class ChannelStore{
+
+export default class ChannelStore{
     @observable storeChannels : IChannel[] = []
     @observable isModalVisible : boolean = false
-   
-    constructor() {
+    rootStore : RootStore
+    constructor(rootStore : RootStore) {
         makeObservable(this)
+        this.rootStore = rootStore
         
     }
 
@@ -44,4 +46,3 @@ class ChannelStore{
        }
     }
 }
-export default createContext(new ChannelStore())
