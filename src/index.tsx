@@ -10,16 +10,18 @@ import NotFound from './components/NotFound';
 import {createBrowserHistory} from 'history';
 import 'react-toastify/dist/ReactToastify.min.css'
 import { ToastContainer } from 'react-toastify';
+import { LoadingComponent } from './components/LoadingComponent';
 export const history = createBrowserHistory();
 ReactDOM.render(
     <React.Fragment>
       <ToastContainer position="bottom-right"/>
       <Router history={history}>
       <Switch>
-      <Route  exact path="/" component={App}/>
-      <Route exact path="/register" component={Register}/>
-      <Route exact path="/login" component={Login}/>
-      <Route  exact component={NotFound}/>
+        <Route  exact path="/" component={App}/>
+        <Route exact path="/register" component={Register}/>
+        <Route exact path="/login" component={Login}/>
+        <Route  exact component={NotFound}/>
+        <Route exact path="/loading" component={LoadingComponent}/>
       </Switch>
     </Router>
     </React.Fragment>

@@ -3,6 +3,7 @@ import { IChannel } from '../models/channels';
 import {history} from '../index'
 import { toast } from 'react-toastify';
 import { IUser, IUserFormValues } from '../models/users';
+import { IMessage, IMessageFormValues } from '../models/messages';
 
 axios.defaults.baseURL = 'http://localhost:5000/api'
 
@@ -43,7 +44,8 @@ const request = {
 
 const Channels = {
     list : ()  : Promise<IChannel[]> => request.get('/channels'),
-    create : (channel : IChannel) => request.post('/channels',channel),
+    create : (channel: IChannel) => request.post('/channels',channel),
+    detail: (channelId: string): Promise<IChannel> => request.get(`/channels/${channelId}`)
 }
 
 
@@ -53,7 +55,13 @@ const User = {
     current : () : Promise<IUser> => request.get(`/user`)
 }
 
+const Messages = {
+    send: (message: IMessageFormValues): Promise<IMessage> => request.post('/messages',message)
+}
+
+
 export default {
     Channels,
-    User
+    User,
+    Messages
 }

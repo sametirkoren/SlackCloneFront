@@ -1,11 +1,13 @@
+import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
 import { Dropdown, Grid, Header, Icon, Message } from 'semantic-ui-react';
 import { RootStoreContext } from '../../stores/rootStore';
 
-export const UserPanel = () => {
+ const UserPanel = () => {
     const rootStore = useContext(RootStoreContext)
     const {user , logout , IsLoggedIn} = rootStore.userStore;
+ 
     const dropdownOptions = () => [
         {
             key : 'user',
@@ -43,11 +45,11 @@ export const UserPanel = () => {
                 {IsLoggedIn && user ? 
                 (
                       <Dropdown trigger={<span>{user?.userName}</span>} options={dropdownOptions()}></Dropdown>
-                ) :  
+                ) : ( 
                     <Message>
                     Hesabın Yok Mu ?   <Link to="/register">Kayıt Ol</Link>
                     </Message> 
-                
+                    )
                 }
               
               
@@ -56,4 +58,4 @@ export const UserPanel = () => {
     )
 }
 
-export default UserPanel;
+export default observer(UserPanel);

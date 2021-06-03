@@ -38,7 +38,7 @@ import {combineValidators, isRequired} from "revalidate";
                        
                         <Button color="pink" fluid size="large" disabled={submitting}>Giriş Yap</Button>
                         {submitError && (<Label color="red" basic content={submitError.statusText}/>) }
-                        <pre>{JSON.stringify(form.getState(),undefined,2)}</pre>
+                       
                     </Segment>
                 </Form>
                  )}
