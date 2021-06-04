@@ -9,7 +9,7 @@ import  MessagesHeader  from './MessagesHeader'
  const Messages = () => {
     const rootStore = useContext(RootStoreContext)
     const {messages , loadMessages} = rootStore.messageStore
-    const {getCurrentChannel , isChannelLoaded} = rootStore.channelStore;
+    const {getCurrentChannel , isChannelLoaded } = rootStore.channelStore;
     const {user} = rootStore.userStore;
 
     useEffect(() => {
@@ -27,7 +27,7 @@ import  MessagesHeader  from './MessagesHeader'
     }
     return (
         <React.Fragment>
-            <MessagesHeader currentChannel={getCurrentChannel()}/>
+            <MessagesHeader currentChannel={getCurrentChannel()} currentUser={user}/>
             <Segment>
                 <Comment.Group>
                     {displayMessages(messages)}

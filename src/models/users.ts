@@ -1,8 +1,10 @@
 export interface IUser{
+    id : string,
     userName : string;
     email :string;
     token : string;
-    avatar? : string
+    avatar? : string,
+    isOnline? : boolean
 }
 
 

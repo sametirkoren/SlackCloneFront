@@ -55,14 +55,17 @@ const request = {
 const Channels = {
     list : ()  : Promise<IChannel[]> => request.get('/channels'),
     create : (channel: IChannel) => request.post('/channels',channel),
-    detail: (channelId: string): Promise<IChannel> => request.get(`/channels/${channelId}`)
+    detail: (channelId: string): Promise<IChannel> => request.get(`/channels/${channelId}`),
+    privateChannel : (channelId:string) : Promise<IChannel> => request.get(`/channels/private/${channelId}`)
 }
 
 
 const User = {
     login : (user : IUserFormValues) : Promise<IUser> => request.post(`/user/login`,user),
     register : (user : IUserFormValues) : Promise<IUser> => request.post(`/user/register`,user),
-    current : () : Promise<IUser> => request.get(`/user`)
+    current : () : Promise<IUser> => request.get(`/user`),
+    list : () : Promise<IUser[]> => request.get('user/list'),
+    logout : (userId : string) : Promise<IUser> => request.get(`/user/logout/${userId}`)
 }
 
 const Messages = {

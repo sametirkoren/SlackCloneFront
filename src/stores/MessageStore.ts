@@ -31,10 +31,13 @@ export default class MessageStore {
     @action loadMessages = async (channelId: string) => {
         try {
             this.messages = []
-            const result = await this.rootStore.channelStore.detail(channelId);
-            runInAction((() => {
-                result?.messages?.forEach((message) => this.messages.push(message))
-            }))
+            if(channelId !== undefined) {
+                const result = await this.rootStore.channelStore.detail(channelId);
+                runInAction((() => {
+                    result?.messages?.forEach((message) => this.messages.push(message))
+                }))
+            }
+          
         } catch (error) {
             throw error;
         }

@@ -70,4 +70,16 @@ export default class ChannelStore{
 
        }
     }
+
+    @action changePrivateChannel = async (userId : string) => {
+        try{
+            let currentChannel = await agent.Channels.privateChannel(userId)
+            runInAction(()=> {
+                this.setActiveChannel(currentChannel)
+            })
+        }
+        catch(error){
+            throw error;
+        }
+    }
 }

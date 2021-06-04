@@ -29,7 +29,7 @@ import { RootStoreContext } from '../../stores/rootStore';
         {
             key : 'signout',
             text : (
-               <span onClick={logout}>Çıkış Yap</span>
+               <span onClick={() => logout(user?.id!)}>Çıkış Yap</span>
             )
         },
     ]

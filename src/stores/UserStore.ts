@@ -6,6 +6,7 @@ import {history} from '../index'
 import md5 from "md5";
 export default class UserStore{
     @observable user : IUser | null = null;
+    @observable users : IUser[] = []
     rootStore : RootStore
 
     constructor(rootStore : RootStore) {
@@ -16,6 +17,19 @@ export default class UserStore{
 
     @computed get IsLoggedIn(){
         return !!this.user;
+    }
+    
+    @action loadUsers = async () => {
+       
+        try {
+            this.users = [];
+            const response = await agent.User.list()
+            runInAction(() => {
+                response.forEach((user) => this.users.push(user))
+            })
+        } catch(error){
+            throw error;
+        }
     }
 
     @action login = async (values: IUserFormValues ) => {
@@ -60,10 +74,20 @@ export default class UserStore{
           throw error
         }
       }
-    @action logout = () => {
-        this.rootStore.commonStore.setToken(null)
-        this.user = null
-        history.push("/login");
+    @action logout = async (id:string) => {
+        try {
+            await agent.User.logout(id)
+
+            runInAction(() => {
+                this.rootStore.commonStore.setToken(null)
+                this.user = null
+                history.push("/login");
+            })
+          
+        } catch (error) {
+            throw error;
+        }
+       
 
     }
 }

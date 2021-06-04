@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useContext, useState } from 'react'
 import { Button, Form, Icon, Input, Modal } from 'semantic-ui-react'
-import { IChannel } from '../../models/channels'
+import { ChannelType, IChannel } from '../../models/channels'
 import {v4 as uuid} from 'uuid';
 import {RootStoreContext} from '../../stores/rootStore';
 import {observer} from 'mobx-react-lite'
@@ -12,7 +12,8 @@ const ChannelForm : React.FC= () => {
     const initialChannel = {
         id : '',
         name : '',
-        description : ''
+        description : '',
+        channelType : ChannelType.Channel
     }
 
     const [channel , setChannel] = useState<IChannel>(initialChannel)
