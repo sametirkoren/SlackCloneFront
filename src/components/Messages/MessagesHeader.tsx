@@ -8,23 +8,25 @@ import { SearchInput } from './SearchInput'
 interface IProps{
     currentChannel : IChannel | null
     currentUser : IUser | null
+    handleStar : () => void
 }
 
-const MessagesHeader : React.FC<IProps>= ({currentChannel,currentUser}) => {
+const MessagesHeader : React.FC<IProps>= ({currentChannel,currentUser , handleStar}) => {
     const isPrivateChannel = () => currentChannel?.channelType === ChannelType.Room
+    const isChannelStarred = currentChannel?.channelType === ChannelType.Starred 
     return (
         <Segment clearing>
             { isPrivateChannel() ?  <Header fluid="true" as="h2" floated="left" style={{marginBottom:0}}>
                 <span>
                     {'@' + (currentUser?.userName == currentChannel?.name ? currentChannel?.description : currentChannel?.name)}
-                <Icon name={'star outline'} color="black"/>
+                
                 </span>
                 <Header.Subheader>2 Kullanıcı</Header.Subheader>
             </Header> : 
             <Header fluid="true" as="h2" floated="left" style={{marginBottom:0}}>
                 <span>
                     {currentChannel?.name}
-                <Icon name={'star outline'} color="black"/>
+                    <Icon name={isChannelStarred ? 'star' : 'star outline'} color={isChannelStarred ? "yellow" : "black"} onClick={handleStar}/>
                 </span>
                 <Header.Subheader>2 Kullanıcı</Header.Subheader>
             </Header>}

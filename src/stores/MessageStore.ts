@@ -2,11 +2,13 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { IMediaFormValues, IMessage, IMessageFormValues } from "../models/messages";
 import { RootStore } from "./rootStore";
+import {HubConnection, HubConnectionBuilder, LogLevel} from '@aspnet/signalr'
 
 
 export default class MessageStore {
     @observable messages : IMessage[] = []
     @observable isModalVisible: boolean = false
+    @observable.ref hubConnection : HubConnection | null = null
     rootStore : RootStore
 
     constructor(rootStore : RootStore){
@@ -14,13 +16,27 @@ export default class MessageStore {
         this.rootStore = rootStore
     }
 
+    @action createHubConnection = () => {
+        this.hubConnection = new HubConnectionBuilder().withUrl('http://localhost:5000/chat',{
+            accessTokenFactory:() => this.rootStore.commonStore.token!
+        })
+        .configureLogging(LogLevel.Information)
+        .build()
+
+        this.hubConnection.start().catch((error) => console.log("Bağlantı hatası" , error))
+
+        this.hubConnection.on('ReceiveMessage',(message : IMessage) => {
+            runInAction(() => this.messages.push(message))
+        })
+    }
+
+    @action stopHubConnection = () => {
+        this.hubConnection?.stop()
+    }
+
     @action sendMessage = async (message: IMessageFormValues) => {
         try{
-            const result = await agent.Messages.send(message)
-            console.log(result);
-            runInAction(() => {
-                this.messages.push(result)
-            })
+            await this.hubConnection!.invoke('SendMessage',message)
         }
         catch(error){
             console.log(error);
@@ -46,10 +62,7 @@ export default class MessageStore {
     @action uploadImage = async(values : IMediaFormValues) => {
         try{
                 const result = await agent.Messages.sendMedia(values)
-                runInAction(()=>{
-                    this.messages.push(result)
-                    console.log(result)
-                })
+                
         }
         catch(error){
             throw error

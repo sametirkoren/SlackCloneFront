@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import { IChannel } from '../models/channels';
+import { ChannelType, IChannel } from '../models/channels';
 import {history} from '../index'
 import { toast } from 'react-toastify';
 import { IUser, IUserFormValues } from '../models/users';
@@ -53,10 +53,11 @@ const request = {
 
 
 const Channels = {
-    list : ()  : Promise<IChannel[]> => request.get('/channels'),
+    list : (channelType : ChannelType)  : Promise<IChannel[]> => request.get(`/channels?ChannelType=${channelType}`),
     create : (channel: IChannel) => request.post('/channels',channel),
     detail: (channelId: string): Promise<IChannel> => request.get(`/channels/${channelId}`),
-    privateChannel : (channelId:string) : Promise<IChannel> => request.get(`/channels/private/${channelId}`)
+    privateChannel : (channelId:string) : Promise<IChannel> => request.get(`/channels/private/${channelId}`),
+    update : (channel : IChannel) => request.put(`/channels/${channel.id}`,channel)
 }
 
 

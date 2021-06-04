@@ -9,13 +9,12 @@ import  MessagesHeader  from './MessagesHeader'
  const Messages = () => {
     const rootStore = useContext(RootStoreContext)
     const {messages , loadMessages} = rootStore.messageStore
-    const {getCurrentChannel , isChannelLoaded } = rootStore.channelStore;
+    const {getCurrentChannel , isChannelLoaded , setChannelStarred  ,activeChannel} = rootStore.channelStore;
     const {user} = rootStore.userStore;
 
     useEffect(() => {
-        if(isChannelLoaded)
-            loadMessages(getCurrentChannel()?.id!)
-    }, [loadMessages,getCurrentChannel ,isChannelLoaded])
+       
+    }, [loadMessages,getCurrentChannel ,isChannelLoaded ,activeChannel])
     console.log(user);
     const displayMessages = (message: IMessage[]) => {
         return (messages.length > 0 && 
@@ -25,9 +24,12 @@ import  MessagesHeader  from './MessagesHeader'
                 <Message currentUser={user} key={message.createdAt.toString()} message={message}></Message>
             )))
     }
+    const handleStar = () => {
+        setChannelStarred(activeChannel!)
+    }
     return (
         <React.Fragment>
-            <MessagesHeader currentChannel={getCurrentChannel()} currentUser={user}/>
+            <MessagesHeader currentChannel={getCurrentChannel()} currentUser={user} handleStar={handleStar}/>
             <Segment>
                 <Comment.Group>
                     {displayMessages(messages)}

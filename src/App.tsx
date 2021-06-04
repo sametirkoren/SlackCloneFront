@@ -13,13 +13,19 @@ function App() {
   const rootStore = useContext(RootStoreContext)
   const {setLoading , loading , token} = rootStore.commonStore;
   const {getUser} = rootStore.userStore
+  const {createHubConnection, stopHubConnection} = rootStore.messageStore;
 
   useEffect(() => {
+    createHubConnection()
     if (token) {
       getUser().finally(() => setLoading())
     }
     else{ 
       setLoading()
+    }
+
+    return()=>{
+      stopHubConnection()
     }
     console.log(`is loading : ${loading}`)
   }, [getUser, setLoading, token, loading])

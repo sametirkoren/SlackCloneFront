@@ -13,8 +13,8 @@ const DirectMessages = () => {
     const getNumberOfUsers = (users:IUser[]) => 
         users.filter((x) => x.id !== user!.id).length
 
-    const changeChannel = (user : IUser) => {
-        changePrivateChannel(toJS(user).id)
+    const changeChannel = async (user : IUser) => {
+        await changePrivateChannel(toJS(user).id)
         loadMessages(getCurrentChannel()?.id!)
     }
     useEffect(() => {

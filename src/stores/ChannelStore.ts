@@ -1,7 +1,7 @@
 import {action,  computed,  makeObservable, observable, runInAction, toJS} from 'mobx'
 
 import agent from '../api/agent'
-import { IChannel } from '../models/channels'
+import { ChannelType, IChannel } from '../models/channels'
 import { RootStore } from './rootStore'
 
 
@@ -13,6 +13,7 @@ export default class ChannelStore{
     @observable isModalVisible : boolean = false
     @observable activeChannel : IChannel | null = null
     @observable isChannelLoaded : boolean = false
+    @observable starredChannels : IChannel[] = []
     rootStore : RootStore
     constructor(rootStore : RootStore) {
         makeObservable(this)
@@ -21,12 +22,13 @@ export default class ChannelStore{
     }
 
 
-    @action loadChannels = async () => {
+    @action loadChannels = async (channelType : ChannelType) => {
        try{
-           this.storeChannels = [];
-            var response = await agent.Channels.list()
+           this.storeChannels = channelType === ChannelType.Channel ?  [] : this.storeChannels;
+           this.starredChannels = channelType === ChannelType.Starred ?  [] : this.starredChannels; 
+            var response = await agent.Channels.list(channelType)
             runInAction(() => {
-                response.forEach((channel) => this.storeChannels.push(channel))
+                response.forEach((channel) => channelType === ChannelType.Starred ? this.starredChannels.push(channel) : this.storeChannels.push(channel))
                 this.isChannelLoaded = true
                 }
             
@@ -37,6 +39,18 @@ export default class ChannelStore{
        catch(err){
             console.log(err);
        }
+    }
+
+    @action setChannelStarred = async (channel : IChannel) => {
+        try {
+            channel.channelType = channel.channelType !== ChannelType.Starred ? ChannelType.Starred : ChannelType.Channel
+            await agent.Channels.update(channel)
+
+            await this.loadChannels(ChannelType.Starred)
+            await this.loadChannels(ChannelType.Channel)
+        } catch (error) {
+            throw error;
+        }
     }
 
     @action showModal = (show:boolean) => {

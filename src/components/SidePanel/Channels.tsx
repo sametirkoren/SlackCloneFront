@@ -1,7 +1,7 @@
 
 import React, {  useContext, useEffect, useState } from 'react'
 import {  Icon, Menu } from 'semantic-ui-react';
-import {IChannel} from '../../models/channels';
+import {ChannelType, IChannel} from '../../models/channels';
 
 import  ChannelItem  from './ChannelItem';
 import {observer} from 'mobx-react-lite'
@@ -15,7 +15,7 @@ const Channels = () => {
     const {storeChannels ,loadChannels , showModal , setActiveChannel , getCurrentChannel} = rootStore.channelStore;
     const {loadMessages} = rootStore.messageStore;
     useEffect(() => {
-       loadChannels()
+       loadChannels(ChannelType.Channel)
     },[loadChannels])
     
     const displayChannels = (channels : IChannel[]) => {
