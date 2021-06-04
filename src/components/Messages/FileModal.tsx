@@ -1,9 +1,13 @@
+
 import React, { useContext, useState } from 'react'
 import { Button, Icon, Input, Modal } from 'semantic-ui-react'
 import { RootStoreContext } from '../../stores/rootStore'
 
+interface IProps{
+    uploadFile : (file : Blob | null) => void
+}
 
-export const FileModal : React.FC = () => {
+export const FileModal : React.FC<IProps> = ({uploadFile}) => {
     const rootStore = useContext(RootStoreContext)
     const {sendMessage , isModalVisible , showModal} = rootStore.messageStore
     const [image,setImage] = useState<Blob | null>(null)
@@ -12,8 +16,11 @@ export const FileModal : React.FC = () => {
         setImage(file)
     }
     const sendFile = () => {
-        console.log(image)
+        uploadFile(image)
+        showModal(false)
+        clearFile()
     }
+    const clearFile = ()=> setImage(null)
     return (
         <Modal basic open={isModalVisible} onClose={() => showModal(false)}>
             <Modal.Header>Bir Resim Seçiniz</Modal.Header>

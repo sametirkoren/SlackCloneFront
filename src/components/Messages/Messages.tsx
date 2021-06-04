@@ -5,28 +5,29 @@ import { IMessage } from '../../models/messages'
 import { RootStoreContext } from '../../stores/rootStore'
 import Message from './Message'
 import  MessageForm  from './MessageForm'
-import { MessagesHeader } from './MessagesHeader'
+import  MessagesHeader  from './MessagesHeader'
  const Messages = () => {
     const rootStore = useContext(RootStoreContext)
     const {messages , loadMessages} = rootStore.messageStore
     const {getCurrentChannel , isChannelLoaded} = rootStore.channelStore;
+    const {user} = rootStore.userStore;
 
     useEffect(() => {
         if(isChannelLoaded)
             loadMessages(getCurrentChannel()?.id!)
     }, [loadMessages,getCurrentChannel ,isChannelLoaded])
-
+    console.log(user);
     const displayMessages = (message: IMessage[]) => {
         return (messages.length > 0 && 
             
             messages.map((message) => (
              
-                <Message key={message.createdAt.toString()} message={message}></Message>
+                <Message currentUser={user} key={message.createdAt.toString()} message={message}></Message>
             )))
     }
     return (
         <React.Fragment>
-            <MessagesHeader/>
+            <MessagesHeader currentChannel={getCurrentChannel()}/>
             <Segment>
                 <Comment.Group>
                     {displayMessages(messages)}

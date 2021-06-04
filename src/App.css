@@ -26,3 +26,7 @@ body,
   border-left : 2px solid green;
   padding-left : 8px;
 }
+
+.message__image{
+  padding : 0.5em;
+}

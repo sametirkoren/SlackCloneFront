@@ -43,7 +43,7 @@ const request = {
         let formData = new FormData()
         formData.append('File',media.file)
         formData.append('ChannelId',media.channelId)
-        formData.append('MessageType','2')
+        formData.append('MessageType', '2')
 
         return axios.post(url,formData,{
             headers:{'Content-type':'multipart/form-data'}
