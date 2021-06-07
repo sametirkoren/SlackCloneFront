@@ -1,10 +1,11 @@
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Icon, Menu } from 'semantic-ui-react'
 import { IUser } from '../../models/users';
 import {RootStoreContext} from '../../stores/rootStore';
 const DirectMessages = () => {
+    const [selectedChannelId,setSelectedChannelId] = useState<string | null> (null)
     const rootStore = useContext(RootStoreContext);
     const {loadUsers , users,user} = rootStore.userStore
     const {changePrivateChannel , getCurrentChannel} = rootStore.channelStore;
@@ -15,7 +16,11 @@ const DirectMessages = () => {
 
     const changeChannel = async (user : IUser) => {
         await changePrivateChannel(toJS(user).id)
-        loadMessages(getCurrentChannel()?.id!)
+      
+        let currentChannelId = getCurrentChannel()?.id!
+
+        loadMessages(currentChannelId)
+        setSelectedChannelId(currentChannelId)
     }
     useEffect(() => {
         loadUsers()
@@ -30,7 +35,7 @@ const DirectMessages = () => {
                 </span> {" "} ({getNumberOfUsers(users)})
             </Menu.Item>
             {users.filter((x) => x.id !== user!.id).map((user) => (
-                <Menu.Item key={user.userName} style={{opacity : 0.7, fontStyle : 'italic'}} onClick={() => changeChannel(user)}>
+                <Menu.Item key={user.userName} style={{opacity : 0.7, fontStyle : 'italic'}} onClick={() => changeChannel(user)} active={selectedChannelId == user.id}>
                     <Icon name="circle" color={isUserOnline(user) ? 'green' : 'red'} />@{''}
                     {user.userName}
                 </Menu.Item>

@@ -11,25 +11,30 @@ import ChannelForm from './ChannelForm';
 
 
 const Channels = () => {
+    const [selectedChannelId,setSelectedChannelId] = useState<string | null> (null)
+
     const rootStore = useContext(RootStoreContext);
     const {storeChannels ,loadChannels , showModal , setActiveChannel , getCurrentChannel} = rootStore.channelStore;
     const {loadMessages} = rootStore.messageStore;
     useEffect(() => {
        loadChannels(ChannelType.Channel)
-    },[loadChannels])
+    },[loadChannels,setActiveChannel])
     
     const displayChannels = (channels : IChannel[]) => {
         return (
             channels.length > 0 &&
             channels.map((channel) => (
-                <ChannelItem changeChannel={changeChannel} key={channel.id} channel={channel}/>
+                <ChannelItem changeChannel={changeChannel} key={channel.id} channel={channel} active={selectedChannelId == channel.id}/>
             )
         ))
     }
 
     const changeChannel = (channel : IChannel) => {
         setActiveChannel(channel)
-        loadMessages(getCurrentChannel()?.id!)
+        let currentChannelId = getCurrentChannel()?.id!
+
+        loadMessages(currentChannelId)
+        setSelectedChannelId(currentChannelId)
         
     }
 

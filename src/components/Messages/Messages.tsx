@@ -29,7 +29,7 @@ import  MessagesHeader  from './MessagesHeader'
     }
     return (
         <React.Fragment>
-            <MessagesHeader currentChannel={getCurrentChannel()} currentUser={user} handleStar={handleStar}/>
+            <MessagesHeader currentChannel={activeChannel} currentUser={user} handleStar={handleStar}/>
             <Segment>
                 <Comment.Group>
                     {displayMessages(messages)}

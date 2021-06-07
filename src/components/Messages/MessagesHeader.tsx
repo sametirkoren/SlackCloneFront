@@ -14,6 +14,7 @@ interface IProps{
 const MessagesHeader : React.FC<IProps>= ({currentChannel,currentUser , handleStar}) => {
     const isPrivateChannel = () => currentChannel?.channelType === ChannelType.Room
     const isChannelStarred = currentChannel?.channelType === ChannelType.Starred 
+    console.log(`Yıldızlı mı ? ${isChannelStarred} `  )
     return (
         <Segment clearing>
             { isPrivateChannel() ?  <Header fluid="true" as="h2" floated="left" style={{marginBottom:0}}>
@@ -26,7 +27,7 @@ const MessagesHeader : React.FC<IProps>= ({currentChannel,currentUser , handleSt
             <Header fluid="true" as="h2" floated="left" style={{marginBottom:0}}>
                 <span>
                     {currentChannel?.name}
-                    <Icon name={isChannelStarred ? 'star' : 'star outline'} color={isChannelStarred ? "yellow" : "black"} onClick={handleStar}/>
+                    <Icon name={isChannelStarred ? 'star' : 'star outline'} color={isChannelStarred ? 'yellow' : 'black'} onClick={handleStar}/>
                 </span>
                 <Header.Subheader>2 Kullanıcı</Header.Subheader>
             </Header>}
