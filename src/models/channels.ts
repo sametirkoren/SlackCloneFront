@@ -1,4 +1,5 @@
 import { IMessage } from "./messages";
+import { IUser } from "./users";
 
 
 export enum ChannelType {
@@ -12,4 +13,10 @@ export interface IChannel{
     description  : string,
     messages? : IMessage[],
     channelType : ChannelType
+}
+
+export interface IChannelNotification {
+    id : string,
+    newMessages : number,
+    sender : IUser
 }

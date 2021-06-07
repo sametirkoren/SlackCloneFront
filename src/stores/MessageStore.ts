@@ -9,6 +9,7 @@ export default class MessageStore {
     @observable messages : IMessage[] = []
     @observable isModalVisible: boolean = false
     @observable.ref hubConnection : HubConnection | null = null
+    @observable userPosts : { [name:string] : {avatar : string , count : number} } = {}
     rootStore : RootStore
 
     constructor(rootStore : RootStore){
@@ -26,7 +27,10 @@ export default class MessageStore {
         this.hubConnection.start().catch((error) => console.log("Bağlantı hatası" , error))
 
         this.hubConnection.on('ReceiveMessage',(message : IMessage) => {
-            runInAction(() => this.messages.push(message))
+            runInAction(() => {
+                this.messages.push(message)
+                this.rootStore.channelStore.addNotification(message.channelId , message)
+            })
         })
     }
 
@@ -51,6 +55,7 @@ export default class MessageStore {
                 const result = await this.rootStore.channelStore.detail(channelId);
                 runInAction((() => {
                     result?.messages?.forEach((message) => this.messages.push(message))
+                    this.countUserPosts(result?.messages)
                 }))
             }
           
@@ -71,5 +76,20 @@ export default class MessageStore {
 
     @action showModal = (show: boolean) => {
         this.isModalVisible = show;
+    }
+
+    @action countUserPosts = (messages : IMessage[] | undefined) => {
+        let userPosts = messages?.reduce((acc:any,message) => {
+            if(message.sender.userName in acc){
+                acc[message.sender.userName].count +=1
+            }else{
+                acc[message.sender.userName] = {
+                    avatar : message.sender.avatar,
+                    count : 1
+                }
+            }
+            return acc
+        },{});
+        this.userPosts = userPosts;
     }
 }

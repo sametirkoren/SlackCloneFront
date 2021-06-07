@@ -6,10 +6,11 @@ export enum MessageType
     Media = 2
 }
 export interface IMessage{
-    content : string,
-    createdAt : Date,
+    content : string
+    createdAt : Date
     sender : IUser
     messageType : MessageType
+    channelId : string
 }
 
 export interface IMessageFormValues{

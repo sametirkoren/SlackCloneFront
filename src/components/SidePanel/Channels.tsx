@@ -14,8 +14,9 @@ const Channels = () => {
     const [selectedChannelId,setSelectedChannelId] = useState<string | null> (null)
 
     const rootStore = useContext(RootStoreContext);
-    const {storeChannels ,loadChannels , showModal , setActiveChannel , getCurrentChannel} = rootStore.channelStore;
+    const {storeChannels ,loadChannels , showModal , setActiveChannel , getCurrentChannel ,channelNotification , cleanNotification} = rootStore.channelStore;
     const {loadMessages} = rootStore.messageStore;
+    const {user} = rootStore.userStore;
     useEffect(() => {
        loadChannels(ChannelType.Channel)
     },[loadChannels,setActiveChannel])
@@ -24,7 +25,7 @@ const Channels = () => {
         return (
             channels.length > 0 &&
             channels.map((channel) => (
-                <ChannelItem changeChannel={changeChannel} key={channel.id} channel={channel} active={selectedChannelId == channel.id}/>
+                <ChannelItem changeChannel={changeChannel} key={channel.id} channel={channel} active={selectedChannelId == channel.id} getNotificationCount = {getNotificationCount} />
             )
         ))
     }
@@ -35,9 +36,23 @@ const Channels = () => {
 
         loadMessages(currentChannelId)
         setSelectedChannelId(currentChannelId)
+        cleanNotification(currentChannelId)
         
     }
 
+
+    const getNotificationCount = (channel : IChannel) => {
+        let count = 0
+        channelNotification.forEach((notification) => {
+            if(notification.id === channel.id && notification.sender.userName !== user?.userName ){
+                count = notification.newMessages;
+            }
+        })
+
+        if(count > 0){
+            return count
+        }
+    }
   
        
         return (

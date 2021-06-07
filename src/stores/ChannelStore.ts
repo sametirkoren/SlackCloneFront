@@ -1,7 +1,8 @@
 import {action,  computed,  makeObservable, observable, runInAction, toJS} from 'mobx'
 
 import agent from '../api/agent'
-import { ChannelType, IChannel } from '../models/channels'
+import { ChannelType, IChannel, IChannelNotification } from '../models/channels'
+import { IMessage } from '../models/messages'
 import { RootStore } from './rootStore'
 
 
@@ -14,6 +15,7 @@ export default class ChannelStore{
     @observable activeChannel : IChannel | null = null
     @observable isChannelLoaded : boolean = false
     @observable starredChannels : IChannel[] = []
+    @observable channelNotification : IChannelNotification[] = []
     rootStore : RootStore
     constructor(rootStore : RootStore) {
         makeObservable(this)
@@ -96,4 +98,34 @@ export default class ChannelStore{
             throw error;
         }
     }
+
+    @action addNotification = (channelId : string ,  message : IMessage ) => {
+        let notification = this.channelNotification.filter((x) => x.id == channelId)
+
+        if(notification.length === 0 ){
+            this.channelNotification.push({
+                id : channelId,
+                newMessages : 1,
+                sender : message.sender
+            
+            })
+            return;
+        }
+
+      
+
+        console.log(JSON.stringify(this.channelNotification,undefined,2))
+        notification[0].newMessages = notification[0].newMessages + 1
+
+    }
+
+    @action cleanNotification = (channelId : string) => {
+        let notification = this.channelNotification.filter((x) => x.id === channelId)
+
+        if(notification.length !==0){
+            notification[0].newMessages = 0
+        }
+    }
+
+
 }

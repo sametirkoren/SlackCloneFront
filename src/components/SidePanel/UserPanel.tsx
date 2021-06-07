@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
-import { Dropdown, Grid, Header, Icon, Message } from 'semantic-ui-react';
+import { Dropdown, Grid, Header, Icon, Message , Image } from 'semantic-ui-react';
 import { RootStoreContext } from '../../stores/rootStore';
 
  const UserPanel = () => {
@@ -9,6 +9,8 @@ import { RootStoreContext } from '../../stores/rootStore';
     const {user , logout , IsLoggedIn} = rootStore.userStore;
  
     const dropdownOptions = () => [
+
+
         {
             key : 'user',
             text : (
@@ -26,6 +28,8 @@ import { RootStoreContext } from '../../stores/rootStore';
             ),
             disabled : true
         },
+
+
         {
             key : 'signout',
             text : (
@@ -44,7 +48,10 @@ import { RootStoreContext } from '../../stores/rootStore';
             <Header style={{padding : '0.25em'}} as="h4" inverted>
                 {IsLoggedIn && user ? 
                 (
-                      <Dropdown trigger={<span>{user?.userName}</span>} options={dropdownOptions()}></Dropdown>
+                      <Dropdown trigger={<span>
+                          <Image src={user.avatar ?? 'http://www.gravatar.com/avatar/?=identicon'} spaced="right" avatar />
+                          {user?.userName
+                          }</span>} options={dropdownOptions()}></Dropdown>
                 ) : ( 
                     <Message>
                     Hesabın Yok Mu ?   <Link to="/register">Kayıt Ol</Link>
