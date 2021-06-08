@@ -10,9 +10,10 @@ interface IProps{
     currentUser : IUser | null
     handleStar : () => void
     handleSearchChange : (event:any) => void
+    numUniqueUsers : number
 }
 
-const MessagesHeader : React.FC<IProps>= ({currentChannel,currentUser , handleStar,handleSearchChange}) => {
+const MessagesHeader : React.FC<IProps>= ({currentChannel,currentUser , handleStar,handleSearchChange , numUniqueUsers}) => {
     const isPrivateChannel = () => currentChannel?.channelType === ChannelType.Room
     const isChannelStarred = currentChannel?.channelType === ChannelType.Starred 
     console.log(`Yıldızlı mı ? ${isChannelStarred} `  )
@@ -23,14 +24,14 @@ const MessagesHeader : React.FC<IProps>= ({currentChannel,currentUser , handleSt
                     {'@' + (currentUser?.userName == currentChannel?.name ? currentChannel?.description : currentChannel?.name)}
                 
                 </span>
-                <Header.Subheader>2 Kullanıcı</Header.Subheader>
+               
             </Header> : 
             <Header fluid="true" as="h2" floated="left" style={{marginBottom:0}}>
                 <span>
                     {currentChannel?.name}
                     <Icon name={isChannelStarred ? 'star' : 'star outline'} color={isChannelStarred ? 'yellow' : 'black'} onClick={handleStar}/>
                 </span>
-                <Header.Subheader>2 Kullanıcı</Header.Subheader>
+                <Header.Subheader>{numUniqueUsers + ' Kullanıcı'}</Header.Subheader>
             </Header>}
           <SearchInput handleSearchChange={handleSearchChange}/>
         </Segment>

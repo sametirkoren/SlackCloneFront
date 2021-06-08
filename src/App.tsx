@@ -14,6 +14,7 @@ function App() {
   const {setLoading , loading , token} = rootStore.commonStore;
   const {getUser} = rootStore.userStore
   const {createHubConnection, stopHubConnection} = rootStore.messageStore;
+  const {isChannelLoaded , storeChannels} = rootStore.channelStore;
 
   useEffect(() => {
     createHubConnection()
@@ -36,10 +37,10 @@ function App() {
      <ColorPanel/>
      <SidePanel/>
      <Grid.Column style={{marginLeft:320}}>
-      <Messages/>
+      {isChannelLoaded && storeChannels.length > 0 && <Messages/> }
      </Grid.Column>
     <Grid.Column width={4}>
-       <MetaPanel/>
+    {isChannelLoaded && storeChannels.length > 0 &&  <MetaPanel/>}
     </Grid.Column>
    
    </Grid>

@@ -6,6 +6,7 @@ import { RootStoreContext } from '../../stores/rootStore'
 import Message from './Message'
 import  MessageForm  from './MessageForm'
 import  MessagesHeader  from './MessagesHeader'
+import Typing from './Typing'
 
 
 interface ISearchFormState{
@@ -23,6 +24,7 @@ interface ISearchFormState{
 
 
      const [messageState , setMessageState] = useState<IMessage[]>([])
+     const [numUniqueUsers,setNumUniqueUsers] = useState(0)
 
     const rootStore = useContext(RootStoreContext)
     const {messages , loadMessages} = rootStore.messageStore
@@ -52,6 +54,19 @@ interface ISearchFormState{
          
      }
 
+
+     const countUniqueUsers = (messages : IMessage[]) => {
+         const uniqueUsers = messages.reduce((acc : string[] , message) => {
+             if(!acc.includes(message.sender.userName)){
+                 acc.push(message.sender.userName)
+             }
+
+             return acc;
+         } , [])
+
+         return uniqueUsers.length
+     }
+
     const handleSearchChange = (event:any) => {
         setSearchState({searchTerm:event.target.value , searchLoading:true})
     }
@@ -60,6 +75,10 @@ interface ISearchFormState{
        if(searchState.searchLoading){
            handleSearchMessages()
        }
+
+       setNumUniqueUsers(
+           countUniqueUsers(messageState.length > 0 ? messageState : messages)
+       )
     }, [handleSearchChange,handleSearchMessages])
     
    
@@ -67,21 +86,21 @@ interface ISearchFormState{
 
     const displayMessages = (message: IMessage[]) => {
         return (message.length > 0 && 
-            
-            message.map((message) => (
-             
-                <Message currentUser={user} key={message.createdAt.toString()} message={message}></Message>
-            )))
+            message.map((message) => {
+                if(message.channelId !== activeChannel?.id) return
+               return( <Message currentUser={user} key={message.createdAt.toString()} message={message}></Message>)
+            }))
     }
     const handleStar = () => {
         setChannelStarred(activeChannel!)
     }
     return (
         <React.Fragment>
-            <MessagesHeader currentChannel={activeChannel} currentUser={user} handleStar={handleStar} handleSearchChange={handleSearchChange}/>
+            <MessagesHeader currentChannel={getCurrentChannel()} currentUser={user} handleStar={handleStar} handleSearchChange={handleSearchChange} numUniqueUsers={numUniqueUsers}/>
             <Segment>
                 <Comment.Group>
                     {displayMessages(messageState.length > 0 ? messageState : messages)}
+                    <Typing/>
                 </Comment.Group>
             </Segment>
             <MessageForm/>

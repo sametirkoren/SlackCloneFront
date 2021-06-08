@@ -1,13 +1,18 @@
 import { observer } from 'mobx-react-lite';
-import React from 'react'
+import React, { useContext } from 'react'
 import { Menu } from 'semantic-ui-react';
+import { RootStoreContext } from '../../stores/rootStore';
 import Channels from './Channels';
 import DirectMessages from './DirectMessages';
 import  Starred  from './Starred';
 import UserPanel from './UserPanel';
 
 
+
 const SidePanel = () => {
+    const rootStore = useContext(RootStoreContext)
+  const {isChannelLoaded , storeChannels} = rootStore.channelStore;
+
     return (
         <Menu
             size="large"
@@ -19,7 +24,7 @@ const SidePanel = () => {
             <UserPanel/>
             <Starred/>
             <Channels/>
-            <DirectMessages/>
+            {isChannelLoaded && storeChannels.length > 0 && <DirectMessages/>}
         </Menu>
     )
 }
