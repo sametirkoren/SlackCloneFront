@@ -48,6 +48,7 @@ import {combineValidators, isRequired} from "revalidate";
                 <Message>
                     Hesabın yok mu ? <Link to="/register">Kayıt Ol</Link>
                 </Message>
+              
             </Grid.Column>
        </Grid>
     )

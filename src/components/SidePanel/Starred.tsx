@@ -28,7 +28,7 @@ const Starred = () => {
     const displayChannels = (channels : IChannel[]) => 
     
         channels.length > 0 && channels.map((channel) => {
-            {console.log(channel.name)}
+          
             return(<ChannelItem key={channel.id} channel={channel} changeChannel={changeChannel} active={selectedChannelId == channel.id} getNotificationCount={() => undefined}/>)
         })
   

@@ -7,6 +7,7 @@ import md5 from "md5";
 export default class UserStore{
     @observable user : IUser | null = null;
     @observable users : IUser[] = []
+    @observable isTyping : boolean = false
     rootStore : RootStore
 
     constructor(rootStore : RootStore) {
@@ -37,8 +38,9 @@ export default class UserStore{
             var user = await agent.User.login(values)
             runInAction(() => {
                 this.user = user;
-                history.push("/");
+                localStorage.setItem("jwt",user.token);
                 this.rootStore.commonStore.setToken(user.token);
+                history.push("/");
             })
            
         } catch (error) {
@@ -53,8 +55,9 @@ export default class UserStore{
             var user = await agent.User.register(values)
             runInAction(() => {
                 this.user = user;
-                history.push("/");
+          
                 this.rootStore.commonStore.setToken(user.token);
+                history.push("/");
             })
            
         } catch (error) {

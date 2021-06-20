@@ -20,7 +20,7 @@ const ChannelForm : React.FC= () => {
     const rootStore = useContext(RootStoreContext);
     const {isModalVisible , showModal ,createChannel} = rootStore.channelStore;
     const handleInputChange = (event : ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.value)
+       
         setChannel({...channel, [event.target.name] :  event.target.value})
     }
 

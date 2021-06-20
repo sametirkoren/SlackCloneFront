@@ -1,3 +1,4 @@
+import { IChannel } from "./channels";
 import { IUser } from "./users";
 
 export enum MessageType
@@ -21,4 +22,13 @@ export interface IMessageFormValues{
 export interface IMediaFormValues{
     file : Blob
     channelId : string
+}
+
+export interface ITypingNotificationFormValues{
+    channelId : string
+}
+
+export interface ITypingNotification{
+    sender : IUser
+    channel : IChannel
 }

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { IUser, IUserFormValues } from '../models/users';
 import { IMediaFormValues, IMessage, IMessageFormValues } from '../models/messages';
 
-axios.defaults.baseURL = 'http://localhost:5000/api'
+axios.defaults.baseURL = 'https://slackclone.sametirkoren.com.tr/api'
 
 axios.interceptors.response.use(undefined,(error) => {
     if(error.message == 'Network Error' && !error.response){

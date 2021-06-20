@@ -88,10 +88,16 @@ import TextInput from '../Common/Form/TextInput';
 
 
                 </FinalForm>
-               
+                <Message
+                    info
+                    header='Hatırlatma !'
+                    
+                    list = {['Şifre minimum 6 karakter olmalıdır.','Şifrenizde en az 1 tane büyük harf olmalıdır.','Şifrenizde en az 1 tane küçük harf olmalıdır.']}
+                />
                 <Message>
                     Hesabın var mı ? <Link to="/login">Giriş Yap</Link>
                 </Message>
+              
             </Grid.Column>
         </Grid>
     )

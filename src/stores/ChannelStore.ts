@@ -24,26 +24,29 @@ export default class ChannelStore{
     }
 
 
-    @action loadChannels = async (channelType : ChannelType) => {
-       try{
-           this.storeChannels = channelType === ChannelType.Channel ?  [] : this.storeChannels;
-           this.starredChannels = channelType === ChannelType.Starred ?  [] : this.starredChannels; 
-            var response = await agent.Channels.list(channelType)
-            if(channelType == ChannelType.Channel)
-                await this.rootStore.messageStore.loadMessages(response[0].id)
-            runInAction(() => {
-                response.forEach((channel) => channelType === ChannelType.Starred ? this.starredChannels.push(channel) : this.storeChannels.push(channel))
-                this.isChannelLoaded = true
-                }
-            
+    @action loadChannels = async (channelType: ChannelType) => {
+        try {
+          this.storeChannels = channelType === ChannelType.Channel ? [] : this.storeChannels
+          this.starredChannels =
+            channelType === ChannelType.Starred ? [] : this.starredChannels
+          var response = await agent.Channels.list(channelType)
+    
+          if (channelType == ChannelType.Channel)
+            await this.rootStore.messageStore.loadMessages(response[0].id)
+    
+          runInAction(() => {
+            response.forEach((channel) =>
+              channelType === ChannelType.Starred
+                ? this.starredChannels.push(channel)
+                : this.storeChannels.push(channel),
             )
-      
-           
-       }
-       catch(err){
-            console.log(err);
-       }
-    }
+    
+            this.isChannelLoaded = true
+          })
+        } catch (err) {
+            throw err;
+        }
+      }
 
     @action setChannelStarred = async (channel : IChannel) => {
         try {
@@ -86,7 +89,7 @@ export default class ChannelStore{
    
        }
        catch(err){
-         console.log(err);
+            throw err;
 
        }
     }

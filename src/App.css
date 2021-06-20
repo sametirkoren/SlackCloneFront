@@ -32,6 +32,11 @@ body,
 }
 
 
+.typing {
+  font-style: italic;
+  font-weight: bold;
+  margin-right: 3px;
+}
 .dot-elastic {
   position: relative;
   width: 10px;

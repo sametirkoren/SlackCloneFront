@@ -28,7 +28,7 @@ function App() {
     return()=>{
       stopHubConnection()
     }
-    console.log(`is loading : ${loading}`)
+
   }, [getUser, setLoading, token, loading])
   if(!loading) return <LoadingComponent content="Loading app..." />
 

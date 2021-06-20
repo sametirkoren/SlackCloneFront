@@ -14,7 +14,7 @@ import { RootStoreContext } from '../../stores/rootStore';
         {
             key : 'user',
             text : (
-                <span>Logged as : <strong>{user?.email}</strong></span>
+                <span>E-Posta : <strong>{user?.email}</strong></span>
             ),
             disabled : true
         },
@@ -24,7 +24,7 @@ import { RootStoreContext } from '../../stores/rootStore';
         {
             key : 'avatar',
             text : (
-                <span>Change avatar</span>
+                <span>Avatar Değiş</span>
             ),
             disabled : true
         },
